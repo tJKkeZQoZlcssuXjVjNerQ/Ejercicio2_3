@@ -1,1 +1,43 @@
-﻿
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Exercise2_3" 
+             BackgroundImage="background.jpg"
+             x:Class="Exercise2_3.MainPage">
+
+    <StackLayout >
+        <StackLayout BackgroundColor = "Silver" Opacity=".4" HeightRequest ="50" Orientation = "Horizontal" Padding = "10,0,0,0">
+            <Image Source = "Small_Microphone" />
+            <Label Text = "Ejercicio 2.3" FontFamily="FontsFree-Net-RetrokiaDemo-9Yr3B" HorizontalTextAlignment= "Center" 
+                   Padding="100,0,0,0" TextColor = "Black" FontSize = "18" VerticalTextAlignment  = "Center"/>
+        </StackLayout>
+        <Label x:Name="lblinfo" Text="____________LISTO GRABA___________" FontSize = "21" HorizontalOptions="Center"/>
+        <StackLayout Orientation="Horizontal">
+            <Image Source = "Big_microphone" />
+            <StackLayout Orientation="Vertical">
+                <StackLayout Orientation = "Horizontal">
+                    <Label x:Name="lblMinutes" Text="00" FontSize = "90" FontFamily="FontsFree-Net-RetrokiaDemo-9Yr3B" FontAttributes="Bold"/>
+                    <Label Text=":" FontSize = "80" FontFamily="FontsFree-Net-RetrokiaDemo-9Yr3B" FontAttributes="Bold"/>
+                    <Label x:Name="lblSeconds" Text="00" FontSize = "90" FontFamily="FontsFree-Net-RetrokiaDemo-9Yr3B" FontAttributes="Bold"/>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" Padding="0,0,0,20">
+                    <Label Text="Detectar silencio:" FontSize = "21"/>
+                    <Switch x:Name="IsSilence" IsToggled = "true" />
+                </StackLayout>
+            </StackLayout>
+        </StackLayout>
+        <FlexLayout JustifyContent="SpaceAround">
+            <Button x:Name="bntRecord" CornerRadius="20" Text = "Grabar" BackgroundColor="#7cbb45" WidthRequest="120" Image="Small_Microphone" Clicked="bntRecord_Clicked"/>
+            <Button x:Name="bntStop" CornerRadius="20" Text = "Detener" BackgroundColor="Silver"  WidthRequest="120" Image="Stop" Clicked="bntStop_Clicked" IsEnabled= "False"/>
+            <Button x:Name="bntPlay" CornerRadius="20" Text = "Play" BackgroundColor="Silver"  WidthRequest="120" Image="Start" Clicked="bntPlay_Clicked" 
+                    FontSize="20" IsEnabled= "False"/>
+        </FlexLayout>
+        <Frame BorderColor="Black" CornerRadius="20" BackgroundColor="FloralWhite" Margin="10">
+            <Entry x:Name="txtdescricion" WidthRequest="600" BackgroundColor="FloralWhite" HorizontalOptions="CenterAndExpand" 
+                   TextColor="Black" Placeholder="Ingrese una descripcion del audio" Margin="0" IsEnabled="False" PlaceholderColor="#2A2A2A"/>
+        </Frame>
+        <Button x:Name="btnsaveSQLite" Text="Guarda a SQLite" TextColor="Black" BackgroundColor="DarkCyan" Clicked="btnsaveSQLite_Clicked" IsEnabled="False" Margin="9" CornerRadius="10"/>
+        <Button x:Name="bntLista" Text = "Listado de Audios" BackgroundColor="CadetBlue" Image="menu" 
+                Clicked="bntLista_Clicked" IsEnabled= "true" Margin="9" CornerRadius="10"/>
+    </StackLayout>
+</ContentPage>
