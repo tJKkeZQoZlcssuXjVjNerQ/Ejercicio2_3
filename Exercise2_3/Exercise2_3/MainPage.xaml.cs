@@ -170,7 +170,116 @@ namespace Exercise2_3
             }
         }
 
-        
+        void Finish_Playing(object sender, EventArgs e)
+        {
+            lblSeconds.Text = "00";
+            lblMinutes.Text = "00";
+            bntRecord.IsEnabled = true;
+            bntRecord.BackgroundColor = Color.FromHex("#7cbb45");
+            bntPlay.IsEnabled = true;
+            bntPlay.BackgroundColor = Color.FromHex("#7cbb45");
+            bntStop.IsEnabled = false;
+            bntStop.BackgroundColor = Color.Silver;
+        }
+
+void StopRecording()
+        {
+            isTimerRunning = false;
+            isTimer2Running = false;
+            bntRecord.IsEnabled = true;
+            bntRecord.BackgroundColor = Color.FromHex("#7cbb45");
+            bntPlay.IsEnabled = true;
+            bntPlay.BackgroundColor = Color.FromHex("#7cbb45");
+            bntStop.IsEnabled = false;
+            bntStop.BackgroundColor = Color.Silver;
+            lblSeconds.Text = "00";
+            lblMinutes.Text = "00";
+            lblinfo.Text = "____________LISTO GRABA___________";
+            txtdescricion.IsEnabled = true;
+            btnsaveSQLite.IsEnabled = true;
+            bntLista.IsEnabled = true;
+        }
+
+private async void bntLista_Clicked(object sender, EventArgs e)
+        {
+            var newpage = new ListAudios();
+            newpage.Title = "LISTADO DE AUDIOS";
+            await Navigation.PushAsync(newpage);
+        }
+
+
+private async void btnsaveSQLite_Clicked(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtdescricion.Text)) 
+            {
+                await DisplayAlert("ALERTA", "DEBES RELLENAR EL CAMPO DE DESCRIPCION PARA GUARDAR TU AUDIO!", "OK");
+            }
+            else
+            {
+                var stream = recorder.GetAudioFileStream();
+                if (seReprodujo != true) //si no se reprodujo es porque no se guardo aun nada 
+                {
+                    bool doesExist = File.Exists(fileName);
+                    if (doesExist)
+                    {
+                        //File.Delete(fileName);
+                        //fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "sample.wav");
+                        String[] filee = fileName.Split('/'); //OBTENGO EL NOMBRE DEL ARCHIVO HACIENDO SPLIT 
+                        String nombrerch = filee[filee.Length - 1];  //SACO EL ULTIMO VALOR DEL ARREGLO QUE ES EL NOMBRE
+                        String respuesta = GetNumbers(nombrerch);//MANDO A SACARSI TIENE O NO NUMEROS
+                        if (respuesta.Length <= 0)
+                        {
+                            fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "sample" + rnd + ".wav");
+                        }
+                        else
+                        {
+                            int numero = Int32.Parse(respuesta);
+                            int numeronuevo = numero += 2;
+                            fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "sample" + numeronuevo + ".wav");
+                        }
+                    }
+                    using (var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+                    {
+                        stream.CopyTo(fileStream);
+                        var mic = new Audio
+                        {
+                            path = fileName.ToString(),
+                            descripcion = txtdescricion.Text,
+                            fecha = DateTime.Now
+                        };
+                        var resultado = await App.BaseDatos.guardaAudios(mic);
+                        if (resultado != 0)
+                        {
+                            await DisplayAlert("Aviso", "Audio Guardado!! en\n" + mic.path, "OK");
+                            btnsaveSQLite.IsEnabled=false;
+                            txtdescricion.Text = "";
+                            StopRecording();
+                        }
+                    }
+                }
+                else //SI SE REPRODUJO es porque se guardo el archivo y no requiere guardar de nuevo
+                {
+                    var mic = new Audio
+                    {
+                        path = fileName.ToString(),
+                        descripcion = txtdescricion.Text,
+                        fecha = DateTime.Now
+                    };
+                    var resultado = await App.BaseDatos.guardaAudios(mic);
+                    if (resultado != 0)
+                    {
+                        await DisplayAlert("Aviso", "Audio Guardado!! en\n" + mic.path, "OK");
+                        txtdescricion.Text = "";
+                        StopRecording();
+                    }
+                    else
+                    {
+                        await DisplayAlert("ERROR", "Ocurrio un error al guardar!! en\n" + mic.path, "OK");
+                    }
+                }
+            }
+        }
+
 
     }
 }
